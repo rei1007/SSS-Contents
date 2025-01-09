@@ -9,9 +9,9 @@
                 background: transparent;
                 background: black;
                 --font-family: "Kosugi Maru", sans-serif;
-                font-family: var(--font-family);
-                font-weight: 400;
                 font-style: normal;
+                font-weight: 400;
+                font-family: var(--font-family);
                 /*Surface*/
                 --time-container-bg: #fff;
                 /*On Primary*/
@@ -32,30 +32,31 @@
             body {
                 margin: 5px;
             }
+
             /*時計*/
             #time-container {
+                border-radius: 25px;
+                background-color: var(--time-container-bg);
                 padding: 10px;
                 width: fit-content;
                 height: fit-content;
-                background-color: var(--time-container-bg);
-                border-radius: 30px;
             }
             #time-container-top {
                 display: flex;
-                height: 40px;
                 margin-bottom: 5px;
+                height: 40px;
             }
             /*日付*/
             #calendar {
-                width: fit-content;
-                padding: 0 15px;
-                margin-right: 20px;
                 display: flex;
                 align-items: center;
                 justify-items: center;
-                color: var(--date-color);
+                margin-right: 20px;
+                border-radius: 15px;
                 background-color: var(--date-bg);
-                border-radius: 20px;
+                padding: 0 15px;
+                width: fit-content;
+                color: var(--date-color);
             }
             #date {
                 font-size: 20px;
@@ -70,8 +71,8 @@
                 padding: 10px 0;
             }
             #live-icon {
-                filter: invert(37%) sepia(73%) saturate(3942%) hue-rotate(341deg) brightness(92%) contrast(92%);
                 vertical-align: top;
+                filter: invert(37%) sepia(73%) saturate(3942%) hue-rotate(341deg) brightness(92%) contrast(92%);
                 animation: anime-live 5s infinite;
             }
             #live-text {
@@ -85,11 +86,13 @@
             }
             @keyframes anime-live {
                 0% {
-                    transform: rotateY(0);    
+                    transform: rotateY(0);
                 }
+
                 88% {
                     transform: rotateY(360deg);
                 }
+
                 100% {
                     rotate: rotateY(0);
                 }
@@ -98,31 +101,52 @@
                 0% {
                     transform: translateY(0);
                 }
+
                 82% {
                     transform: translateY(0);
                 }
+
                 86% {
                     transform: translateY(-5px);
                 }
+
                 90% {
                     transform: translateY(2px);
                 }
+
                 100% {
                     transform: translateY(0);
                 }
             }
             /*時間*/
             #time {
-                width: 220px;
-                height: 85px;
                 display: flex;
+                position: relative;
                 justify-content: center;
                 align-items: center;
-                color: var(--time-color);
+                border-radius: 15px;
                 background-color: var(--time-bg);
-                border-radius: 20px;
+                width: 220px;
+                height: 85px;
+                color: var(--time-color);
                 font-size: 60px;
                 line-height: 60px;
+            }
+            #sec {
+                display: none;
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                justify-content: center;
+                align-items: center;
+                margin-left: 10px;
+                border-radius: 15px;
+                background-color: var(--time-container-bg);
+                width: 30px;
+                height: 30px;
+                color: var(--time-color);
+                font-size: 20px;
+                line-height: 20px;
             }
         </style>
     </head>
@@ -141,7 +165,7 @@
             //時計
             function showClock() {
                 let now = new Date();
-                let month = now.getMonth();
+                let month = now.getMonth() + 1;
                 let date = now.getDate();
                 let monthndate = month + "/" + date;
                 let days = ["(日)", "(月)", "(火)", "(水)", "(木)", "(金)", "(土)"]
@@ -152,7 +176,7 @@
                 let sec = now.getSeconds();
                 let showHour = ("0" + hour).slice(-2)
                 let showMin = ("0" + min).slice(-2)
-                let clock = showHour + ":" + showMin;
+                let clock = showHour + ":" + showMin + `<span id="sec">${sec}</span>`;
                 document.getElementById("date").innerHTML = monthndate;
                 document.getElementById("day").innerHTML = dayJapan;
                 document.getElementById("time").innerHTML = clock;
