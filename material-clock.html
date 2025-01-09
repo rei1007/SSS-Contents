@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>OBS-Clock</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap');
+            :root {
+                background: transparent;
+                background: black;
+                --font-family: "Kosugi Maru", sans-serif;
+                font-family: var(--font-family);
+                font-weight: 400;
+                font-style: normal;
+                /*Surface*/
+                --time-container-bg: #fff;
+                /*On Primary*/
+                --date-color: #fff;
+                /*Primary*/
+                --date-bg: #000;
+                /*Tertiary*/
+                --live-color: #000;
+                /*On Secondary Container*/
+                --time-color: #000;
+                /*Secondary Container*/
+                --time-bg: #e0e0e0;
+            }
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                margin: 5px;
+            }
+            /*時計*/
+            #time-container {
+                padding: 10px;
+                width: fit-content;
+                height: fit-content;
+                background-color: var(--time-container-bg);
+                border-radius: 30px;
+            }
+            #time-container-top {
+                display: flex;
+                height: 40px;
+                margin-bottom: 5px;
+            }
+            /*日付*/
+            #calendar {
+                width: fit-content;
+                padding: 0 15px;
+                margin-right: 20px;
+                display: flex;
+                align-items: center;
+                justify-items: center;
+                color: var(--date-color);
+                background-color: var(--date-bg);
+                border-radius: 20px;
+            }
+            #date {
+                font-size: 20px;
+                line-height: 20px;
+            }
+            #day {
+                font-size: 16px;
+                line-height: 16px;
+            }
+            /*Live*/
+            .live {
+                padding: 10px 0;
+            }
+            #live-icon {
+                filter: invert(37%) sepia(73%) saturate(3942%) hue-rotate(341deg) brightness(92%) contrast(92%);
+                vertical-align: top;
+                animation: anime-live 5s infinite;
+            }
+            #live-text {
+                color: var(--live-color);
+                font-weight: bold;
+                font-size: 20px;
+                line-height: 20px;
+            }
+            #live-text-anime {
+                animation: anime-live-text 5s infinite;
+            }
+            @keyframes anime-live {
+                0% {
+                    transform: rotateY(0);    
+                }
+                88% {
+                    transform: rotateY(360deg);
+                }
+                100% {
+                    rotate: rotateY(0);
+                }
+            }
+            @keyframes anime-live-text {
+                0% {
+                    transform: translateY(0);
+                }
+                82% {
+                    transform: translateY(0);
+                }
+                86% {
+                    transform: translateY(-5px);
+                }
+                90% {
+                    transform: translateY(2px);
+                }
+                100% {
+                    transform: translateY(0);
+                }
+            }
+            /*時間*/
+            #time {
+                width: 220px;
+                height: 85px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: var(--time-color);
+                background-color: var(--time-bg);
+                border-radius: 20px;
+                font-size: 60px;
+                line-height: 60px;
+            }
+        </style>
+    </head>
+    <body>
+        <!--時計-->
+        <div id="time-container">
+            <div id="time-container-top">
+                <div id="calendar" class="time-content"><span id="date"></span><span id="day"></span></div>
+                <div class="live time-content"><img id="live-icon" src="image/live.svg" width="20px" height="20px"></div>
+                <div id="live-text-anime" class="live time-content"><span id="live-text">Live</span></div>
+            </div>
+            <div id="time" class="time-content"></div>
+        </div>
+
+        <script>
+            //時計
+            function showClock() {
+                let now = new Date();
+                let month = now.getMonth();
+                let date = now.getDate();
+                let monthndate = month + "/" + date;
+                let days = ["(日)", "(月)", "(火)", "(水)", "(木)", "(金)", "(土)"]
+                let day = now.getDay();
+                let dayJapan = days[day]
+                let hour = now.getHours();
+                let min = now.getMinutes();
+                let sec = now.getSeconds();
+                let showHour = ("0" + hour).slice(-2)
+                let showMin = ("0" + min).slice(-2)
+                let clock = showHour + ":" + showMin;
+                document.getElementById("date").innerHTML = monthndate;
+                document.getElementById("day").innerHTML = dayJapan;
+                document.getElementById("time").innerHTML = clock;
+            }
+            setInterval('showClock()', 1000);
+        </script>
+    </body>
+</html>
