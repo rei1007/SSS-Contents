@@ -135,7 +135,7 @@
                 line-height: 60px;
             }
             #sec {
-                display: none;
+                display: flex;
                 position: absolute;
                 right: 0;
                 bottom: 0;
@@ -185,6 +185,34 @@
                 document.getElementById("time").innerHTML = clock;
             }
             setInterval('showClock()', 1000);
+
+            // URLハッシュからCSSカスタムプロパティを読み込む
+            function applyHashToCssVariables() {
+                let hash = location.hash.substring(1);
+                if (hash) {
+                   try{
+                    let parsedColors = JSON.parse(decodeURIComponent(hash));
+                    Object.keys(parsedColors).forEach(key => {
+                       let variableName = key.replace("change-", "--").replace(/-/g,"-");
+                       if (key === "change-sec-display") {
+                           let secElement = document.getElementById("sec");
+                           if (secElement){
+                                secElement.style.display = parsedColors[key];
+                           }
+                       }else{
+                            document.documentElement.style.setProperty(variableName, parsedColors[key]);
+                        }
+                   });
+                  }catch (error){
+                    console.error("URLハッシュの解析に失敗しました",error);
+                  }
+               }
+             }
+            // ページ読み込み時にURLハッシュを適用
+            applyHashToCssVariables();
+
+            // URLハッシュの変更を監視し、CSSカスタムプロパティを更新
+            window.addEventListener('hashchange', applyHashToCssVariables);
         </script>
     </body>
 </html>
