@@ -24,6 +24,8 @@
                 --time-color: #000;
                 /*Secondary Container*/
                 --time-bg: #e0e0e0;
+                /*second display*/
+                --sec-display
             }
             * {
                 margin: 0;
@@ -135,7 +137,7 @@
                 line-height: 60px;
             }
             #sec {
-                display: flex;
+                display: var(--sec-display);
                 position: absolute;
                 right: 0;
                 bottom: 0;
@@ -188,26 +190,19 @@
 
             // URLハッシュからCSSカスタムプロパティを読み込む
             function applyHashToCssVariables() {
-                let hash = location.hash.substring(1);
-                if (hash) {
-                   try{
-                    let parsedColors = JSON.parse(decodeURIComponent(hash));
-                    Object.keys(parsedColors).forEach(key => {
-                       let variableName = key.replace("change-", "--").replace(/-/g,"-");
-                       if (key === "change-sec-display") {
-                           let secElement = document.getElementById("sec");
-                           if (secElement){
-                                secElement.style.display = parsedColors[key];
-                           }
-                       }else{
+               let hash = location.hash.substring(1);
+               if (hash) {
+                    try{
+                        let parsedColors = JSON.parse(decodeURIComponent(hash));
+                       Object.keys(parsedColors).forEach(key => {
+                            let variableName = key.replace("change-", "--").replace(/-/g,"-");
                             document.documentElement.style.setProperty(variableName, parsedColors[key]);
-                        }
-                   });
-                  }catch (error){
-                    console.error("URLハッシュの解析に失敗しました",error);
-                  }
-               }
-             }
+                       });
+                    }catch (error){
+                       console.error("URLハッシュの解析に失敗しました",error);
+                   }
+                }
+            }
             // ページ読み込み時にURLハッシュを適用
             applyHashToCssVariables();
 
