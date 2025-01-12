@@ -6,7 +6,7 @@
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap');
             :root {
-                --background: transparent;
+                --background: gray;
                 --font-family: "Kosugi Maru", sans-serif;
                 font-style: normal;
                 font-weight: 400;
@@ -23,6 +23,12 @@
                 --time-color: #000;
                 /*Secondary Container*/
                 --time-bg: #e0e0e0;
+                /*container-top display*/
+                --top-display: flex;
+                /*date display*/
+                --calender-display: flex;
+                /*live display*/
+                --live-display: block;
                 /*second display*/
                 --sec-display: none;
             }
@@ -44,19 +50,19 @@
                 height: fit-content;
             }
             #time-container-top {
-                display: flex;
+                display: var(--top-display);
                 margin-bottom: 5px;
                 height: 40px;
             }
             /*日付*/
             #calendar {
-                display: flex;
-                align-items: center;
+                display: var(--calender-display);
+                align-items: flex-end;
                 justify-items: center;
                 margin-right: 20px;
                 border-radius: 15px;
                 background-color: var(--date-bg);
-                padding: 0 15px;
+                padding: 10px 15px;
                 width: fit-content;
                 color: var(--date-color);
             }
@@ -72,6 +78,7 @@
             }
             /*Live*/
             .live {
+                display: var(--live-display);
                 padding: 10px 0;
             }
             #live-icon {
@@ -125,33 +132,33 @@
             /*時間*/
             #time {
                 display: flex;
-                position: relative;
                 justify-content: center;
-                align-items: center;
+                align-items: flex-end;
                 border-radius: 15px;
                 background-color: var(--time-bg);
+                padding: 12.5px 0;
                 width: 220px;
-                height: 85px;
                 color: var(--time-color);
                 font-size: 60px;
                 line-height: 60px;
             }
-            #sec {
-                display: var(--sec-display);
-                position: absolute;
-                right: 0;
-                bottom: 0;
+            #hor-min {
+                display: flex;
                 justify-content: center;
                 align-items: center;
-                margin-left: 10px;
-                border-radius: 15px;
-                background-color: var(--time-container-bg);
+                width: 160px;
+            }
+            #sec {
+                display: var(--sec-display);
+                justify-content: center;
+                align-items: center;
+                border-radius: 10px;
+                padding-bottom: 4px;
                 width: 30px;
-                height: 30px;
                 color: var(--time-color);
                 font-weight: bold;
-                font-size: 20px;
-                line-height: 20px;
+                font-size: 25px;
+                line-height: 25px;
             }
         </style>
     </head>
@@ -181,7 +188,7 @@
                 let sec = now.getSeconds();
                 let showHour = ("0" + hour).slice(-2)
                 let showMin = ("0" + min).slice(-2)
-                let clock = showHour + ":" + showMin + `<span id="sec">${sec}</span>`;
+                let clock = `<span id="hor-min">${showHour}:${showMin}</span><span id="sec">${sec}</span>`;
                 document.getElementById("date").innerHTML = monthndate;
                 document.getElementById("day").innerHTML = dayJapan;
                 document.getElementById("time").innerHTML = clock;
