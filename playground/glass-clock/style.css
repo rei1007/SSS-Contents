@@ -1,0 +1,140 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --text-primary: rgba(240, 240, 240, 0.9);
+    --text-secondary: rgba(240, 240, 240, 0.7);
+    --text-tertiary: rgba(240, 240, 240, 0.5);
+    --clock-bg: rgba(150, 150, 150, 0.2);
+    --block-bg: rgba(255, 255, 255, 0.08);
+    --border-color: rgba(255, 255, 255, 0.2);
+}
+
+body {
+    background: linear-gradient(
+        120deg,
+        #fff 0%,
+        #ddd 50%,
+        #666 51%,
+        #000 100%
+    );
+    min-height: 100vh;
+    animation: gradient 10s ease infinite;
+    background-size: 400% 400%;
+}
+
+.dark {
+    --text-primary: rgba(25, 25, 25, 0.9);
+    --text-secondary: rgba(25, 25, 25, 0.7);
+    --text-tertiary: rgba(25, 25, 25, 0.5);
+    --clock-bg: rgba(100, 100, 100, 0.2);
+    --block-bg: rgba(0, 0, 0, 0.08);
+    --border-color: rgba(50, 50, 50, 0.2);
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.clock-container {
+    margin: 5px auto;
+    width: 490px;
+}
+
+.clock {
+    width: 490px;
+    height: 190px;
+    background: var(--clock-bg);
+    backdrop-filter: blur(30px);
+    border-radius: 24px;
+    padding: 20px 30px;
+    box-shadow: 
+        0 4px 80px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 1px var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.time-section {
+    display: grid;
+    grid-template-columns: repeat(5, auto);
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 90px;
+    margin-bottom: 5px;
+}
+
+.time-block {
+    background: var(--block-bg);
+    padding: 10px;
+    border-radius: 16px;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    width: 85px;
+    height: 85px;
+    text-align: center;
+    letter-spacing: -2px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.colon {
+    font-size: 3rem;
+    color: var(--text-secondary);
+    font-weight: 200;
+    margin-top: -0.5rem;
+}
+
+.secDisplay {
+    display: none;
+}
+
+.date-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+    height: 45px;
+}
+
+.date {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.day {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    flex-grow: 1;
+}
+
+.timezone {
+    font-size: 1rem;
+    color: var(--text-tertiary);
+    font-weight: 400;
+    text-align: right;
+}
