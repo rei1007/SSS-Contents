@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>配信時間カウンター</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #000;
+            display: flex;
+            font-family: "Zen Maru Gothic", serif;
+            height: 100vh;
+            justify-content: center;
+            margin: 0;
+            align-items: center;
+        }
+
+        #container {
+            background-color: #fff;
+            border-radius: 16px;
+            display: flex;
+            padding: 0 32px;
+            flex-direction: column;
+            justify-content: center;
+            width: 440px;
+            height: 390px;
+            position: relative;
+        }
+
+        #current_time_wrap {
+            width: fit-content;
+        }
+
+        #current_time {
+            width: fit-content;
+            color: #222;
+            font-size: 104px;
+            line-height: 100%;
+            font-weight: bold;
+        }
+
+        #timer_wrap {
+            width: fit-content;
+        }
+
+        #timer {
+            width: fit-content;
+            color: #222;
+            font-size: 104px;
+            line-height: 100%;
+            font-weight: bold;
+        }
+
+        #date {
+            margin-left: 16px;
+            font-size: 40px;
+            line-height: 100%;
+        }
+
+        #day {
+            font-size: 32px;
+        }
+
+        h1 {
+            width: fit-content;
+            color: #555;
+            font-size: 40px;
+            line-height: 100%;
+        }
+
+        hr {
+            border: 0;
+            height: 4px;
+            border-radius: 2px;
+            background-color: #aaa;
+            margin: 16px 0;
+        }
+
+        #restart {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            background-color: #e44d26;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            width: fit-content;
+            padding: 4px 8px;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+        }
+
+        #container:hover #restart {
+            display: block;
+        }
+
+        #restart:hover {
+            background-color: #c63d17;
+        }
+    </style>
+</head>
+<body>
+    <main id="container">
+        <div id="current_time_wrap">
+            <h1>現在時刻：</h1>
+            <div id="current_time">00:00:00</div>
+        </div>
+
+        <hr>
+
+        <div id="timer_wrap">
+            <h1>配信時間：</h1>
+            <div id="timer">00:00:00</div>
+        </div>
+
+        <div id="restart">リセット</div>
+    </main>
+    <script>
+        let startTime;
+        let timerInterval;
+
+        function startTimer() {
+            const now = new Date();
+            const milliseconds = now.getMilliseconds();
+            startTime = Date.now() - (localStorage.getItem('elapsedTime') || 0) - milliseconds;
+            timerInterval = setInterval(updateTimer, 500);
+        }
+
+        function updateTimer() {
+            const elapsedTime = Date.now() - startTime;
+            localStorage.setItem('elapsedTime', elapsedTime);
+
+            const hours = Math.floor(elapsedTime / 3600000);
+            const minutes = Math.floor((elapsedTime % 3600000) / 60000);
+            const seconds = Math.floor((elapsedTime % 60000) / 1000);
+
+            const formattedTime = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+            document.getElementById('timer').innerText = formattedTime;
+        }
+
+        function updateCurrentTime() {
+            const now = new Date();
+            const date = now.getDate();
+            const month = now.getMonth() + 1;
+            const dayNum = now.getDay();
+            const dayJP = ['日', '月', '火', '水', '木', '金', '土'];
+            const day = dayJP[dayNum];
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            //const seconds = now.getSeconds();
+
+            //const formattedTime = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+            const formattedTime = `${pad(hours)}:${pad(minutes)}<span id="date">${month}/${date}<span id="day">(${day})</span></span>`;
+            document.getElementById('current_time').innerHTML = formattedTime;
+        }
+
+        function pad(number) {
+            return (number < 10 ? '0' : '') + number;
+        }
+
+        window.onload = () => {
+            startTimer();
+            setInterval(updateCurrentTime, 1000);
+        };
+
+        window.onbeforeunload = () => {
+            clearInterval(timerInterval);
+        };
+
+        const restartButton = document.getElementById('restart');
+        let pausedTime = 0;
+        let isRunning = true;
+
+        restartButton.addEventListener('click', () => {
+            startTime = Date.now();
+            pausedTime = 0;
+            updateTimer();
+        });
+    </script>
+</body>
+</html>
