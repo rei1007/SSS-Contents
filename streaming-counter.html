@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>配信時間カウンター</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap');
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -15,7 +14,6 @@
         }
 
         body {
-            background-color: #000;
             display: flex;
             font-family: "Zen Maru Gothic", serif;
             height: 100vh;
@@ -72,7 +70,7 @@
 
         h1 {
             width: fit-content;
-            color: #555;
+            color: #222222aa;
             font-size: 40px;
             line-height: 100%;
         }
@@ -81,31 +79,34 @@
             border: 0;
             height: 4px;
             border-radius: 2px;
-            background-color: #aaa;
+            background-color: #22222222;
             margin: 16px 0;
         }
 
-        #restart {
+        #setting {
             display: none;
-            cursor: pointer;
             font-size: 24px;
-            background-color: #e44d26;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            width: fit-content;
-            padding: 4px 8px;
+            line-height: 100%;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: #aaa;
+            background-color: #29292e;
             position: absolute;
             top: 8px;
             right: 8px;
+            cursor: pointer;
         }
 
-        #container:hover #restart {
+        #container:hover #setting {
             display: block;
         }
 
-        #restart:hover {
-            background-color: #c63d17;
+        #controller {
+            display: none;
+            position: absolute;
+            top: 56px;
+            right: 8px;
+            width: fit-content;
         }
     </style>
 </head>
@@ -113,18 +114,20 @@
     <main id="container">
         <div id="current_time_wrap">
             <h1>現在時刻：</h1>
-            <div id="current_time">00:00:00</div>
+            <div id="current_time" class="time">00:00:00</div>
         </div>
 
-        <hr>
+        <hr id="line">
 
         <div id="timer_wrap">
             <h1>配信時間：</h1>
-            <div id="timer">00:00:00</div>
+            <div id="timer" class="time">00:00:00</div>
         </div>
-
-        <div id="restart">リセット</div>
+        <div id="setting">設定</div>
+        <div id="controller"></div>
     </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/tweakpane@3.1.9/dist/tweakpane.min.js"></script>
     <script>
         let startTime;
         let timerInterval;
@@ -157,9 +160,7 @@
             const day = dayJP[dayNum];
             const hours = now.getHours();
             const minutes = now.getMinutes();
-            //const seconds = now.getSeconds();
 
-            //const formattedTime = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
             const formattedTime = `${pad(hours)}:${pad(minutes)}<span id="date">${month}/${date}<span id="day">(${day})</span></span>`;
             document.getElementById('current_time').innerHTML = formattedTime;
         }
@@ -168,23 +169,57 @@
             return (number < 10 ? '0' : '') + number;
         }
 
-        window.onload = () => {
+        window.onload = function() {
+            updateCurrentTime();
             startTimer();
-            setInterval(updateCurrentTime, 1000);
+
+            const settingButton = document.getElementById("setting");
+            const controller = document.getElementById("controller");
+
+            settingButton.addEventListener("click", function() {
+                if (controller.style.display === "none") {
+                    controller.style.display = "block";
+                    settingButton.innerText = "閉じる";
+                } else {
+                    controller.style.display = "none";
+                    settingButton.innerText = "設定";
+                }
+            });
+        }
+
+        const pane = new Tweakpane.Pane({
+            container: document.getElementById('controller'),
+        });
+
+        const PARAMS = {
+            背景: '#ffffff',
+            文字: '#222',
         };
 
-        window.onbeforeunload = () => {
+        pane.addInput(PARAMS, '背景').on('change', (ev) => {
+            document.getElementById("container").style.backgroundColor = ev.value;
+        });
+
+        pane.addInput(PARAMS, '文字').on('change', (ev) => {
+            const elements = document.querySelectorAll(".time");
+            elements.forEach(element => {
+                element.style.color = ev.value;
+            });
+            const h1Elements = document.querySelectorAll("h1");
+            h1Elements.forEach(element => {
+                element.style.color = ev.value + "aa";
+            });
+            const lineElements = document.querySelectorAll("#line");
+            lineElements.forEach(element => {
+                element.style.backgroundColor = ev.value + "22";
+            });
+        });
+
+        pane.addButton({ title: 'タイマーリセット' }).on('click', () => {
             clearInterval(timerInterval);
-        };
-
-        const restartButton = document.getElementById('restart');
-        let pausedTime = 0;
-        let isRunning = true;
-
-        restartButton.addEventListener('click', () => {
-            startTime = Date.now();
-            pausedTime = 0;
-            updateTimer();
+            localStorage.removeItem('elapsedTime');
+            document.getElementById('timer').innerText = '00:00:00';
+            startTimer();
         });
     </script>
 </body>
